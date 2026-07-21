@@ -24,4 +24,49 @@ public class Student {
     private Integer semester;
     private LocalDate dateOfBirth;
     private Float cgpa;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+    public Integer getSemester() {
+        return semester;
+    }
+    public void setSemester(Integer semester) {
+        this.semester = semester;
+    }
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    public Float getCgpa() {
+        return cgpa;
+    }
+    public void setCgpa(Float cgpa) {
+        this.cgpa = cgpa;
+    }
 }
