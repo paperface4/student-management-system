@@ -4,6 +4,9 @@ import com.farrukh.studentmanagement.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import com.farrukh.studentmanagement.entity.Student;
 import java.util.List;
+import com.farrukh.studentmanagement.exception.StudentNotFoundException;
+import com.farrukh.studentmanagement.exception.DuplicateEmailException;
+import com.farrukh.studentmanagement.exception.DuplicateRollNumberException;
 
 @Service
 public class StudentService {
@@ -25,7 +28,7 @@ public Student registerStudent(Student student) {
     }
 
     if (student.getRollNumber() == null || student.getRollNumber().isBlank()) {
-        throw new IllegalArgumentException("Roll number cannot be null or empty");
+        throw new DuplicateRollNumberException("Roll number cannot be null or empty");
     }
 
     if (student.getName() == null || student.getName().isBlank()) {
@@ -35,7 +38,7 @@ public Student registerStudent(Student student) {
         throw new IllegalArgumentException("CGPA must be between 0.0 and 4.0");
     }
     if(studentRepository.existsByEmail(student.getEmail())) {
-        throw new IllegalArgumentException("Email already exists");
+        throw new DuplicateEmailException("Email already exists");
     }
     if(studentRepository.existsByRollNumber(student.getRollNumber())) {
         throw new IllegalArgumentException("Roll number already exists");
@@ -49,11 +52,17 @@ public List<Student> getAllStudents(){
 }
 
 public Student getstudentById(Long ID){
-    return studentRepository.findById(ID). orElseThrow(()->new RuntimeException("student doesn't exits with id "+ID));
+    return studentRepository.findById(ID). orElseThrow(() ->
+        new StudentNotFoundException(
+                "No student exists with id: " + ID
+        ));
 }
 
 public Student updateStudentInfo(Long id,Student student){
-   Student existingStudent=studentRepository.findById(id). orElseThrow(()->new RuntimeException("student doesn't exits with id "+id));
+   Student existingStudent=studentRepository.findById(id).orElseThrow(() ->
+        new StudentNotFoundException(
+                "No student exists with id: " + id
+        ));
    existingStudent.setName(student.getName());
    existingStudent.setEmail(student.getEmail());
    existingStudent.setRollNumber(student.getRollNumber());
@@ -64,7 +73,7 @@ public Student updateStudentInfo(Long id,Student student){
 }
 
 public void deleteStudent(Long Id){
-    Student existingStudent=studentRepository.findById(Id). orElseThrow(()->new RuntimeException("student doesn't exits with id "+Id));
+    Student existingStudent=studentRepository.findById(Id). orElseThrow(()->new StudentNotFoundException("No student exists with id: " + Id));
     studentRepository.delete(existingStudent);
 }
 }
