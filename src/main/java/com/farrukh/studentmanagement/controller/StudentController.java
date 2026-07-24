@@ -2,6 +2,9 @@ package com.farrukh.studentmanagement.controller;
 
 import com.farrukh.studentmanagement.entity.Student;
 import com.farrukh.studentmanagement.service.StudentService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +26,7 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public Student registerStudent(@RequestBody Student student) {
+    public Student registerStudent( @Valid @RequestBody Student student) {
         return studentService.registerStudent(student);
     }
 
