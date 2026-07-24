@@ -3,6 +3,8 @@ package com.farrukh.studentmanagement.service;
 import com.farrukh.studentmanagement.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import com.farrukh.studentmanagement.entity.Student;
+import java.util.List;
+
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
@@ -40,5 +42,29 @@ public Student registerStudent(Student student) {
     }
 
     return studentRepository.save(student);
+}
+
+public List<Student> getAllStudents(){
+    return studentRepository.findAll();
+}
+
+public Student getstudentById(Long ID){
+    return studentRepository.findById(ID). orElseThrow(()->new RuntimeException("student doesn't exits with id "+ID));
+}
+
+public Student updateStudentInfo(Long id,Student student){
+   Student existingStudent=studentRepository.findById(id). orElseThrow(()->new RuntimeException("student doesn't exits with id "+id));
+   existingStudent.setName(student.getName());
+   existingStudent.setEmail(student.getEmail());
+   existingStudent.setRollNumber(student.getRollNumber());
+   existingStudent.setCgpa(student.getCgpa());
+   existingStudent.setDepartment(student.getDepartment());
+   existingStudent.setDateOfBirth(student.getDateOfBirth());
+   return studentRepository.save(existingStudent);
+}
+
+public void deleteStudent(Long Id){
+    Student existingStudent=studentRepository.findById(Id). orElseThrow(()->new RuntimeException("student doesn't exits with id "+Id));
+    studentRepository.delete(existingStudent);
 }
 }
