@@ -1,5 +1,6 @@
 package com.farrukh.studentmanagement.service;
 
+import com.farrukh.studentmanagement.dto.PagedStudentResponse;
 import com.farrukh.studentmanagement.dto.StudentRequest;
 import com.farrukh.studentmanagement.dto.StudentResponse;
 import com.farrukh.studentmanagement.entity.Student;
@@ -7,7 +8,9 @@ import com.farrukh.studentmanagement.exception.DuplicateEmailException;
 import com.farrukh.studentmanagement.exception.DuplicateRollNumberException;
 import com.farrukh.studentmanagement.exception.StudentNotFoundException;
 import com.farrukh.studentmanagement.repository.StudentRepository;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,16 +42,28 @@ public class StudentService {
         return mapToResponse(savedStudent);
     }
 
-    // Get all students
-    public List<StudentResponse> getAllStudents() {
+    
+    public PagedStudentResponse getAllStudents(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
 
-        return studentRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
+    Page<Student> students = studentRepository.findAll(pageable);
 
-    // Get one student by ID
+    List<StudentResponse> studentResponses = students.getContent()
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+
+    return new PagedStudentResponse(
+            studentResponses,
+            students.getNumber(),
+            students.getSize(),
+            students.getTotalElements(),
+            students.getTotalPages(),
+            students.isLast()
+    );
+}
+
+    
     public StudentResponse getStudentById(Long id) {
 
         Student student = findStudentById(id);
@@ -56,7 +71,6 @@ public class StudentService {
         return mapToResponse(student);
     }
 
-    // Update student information
     public StudentResponse updateStudentInfo(
             Long id,
             StudentRequest request
@@ -64,10 +78,6 @@ public class StudentService {
 
         Student existingStudent = findStudentById(id);
 
-        /*
-         * Only throw duplicate email exception when another student
-         * already owns the requested email.
-         */
         if (!existingStudent.getEmail().equals(request.getEmail())
                 && studentRepository.existsByEmail(request.getEmail())) {
 
@@ -95,7 +105,6 @@ public class StudentService {
         return mapToResponse(updatedStudent);
     }
 
-    // Delete student
     public void deleteStudent(Long id) {
 
         Student existingStudent = findStudentById(id);
@@ -103,7 +112,6 @@ public class StudentService {
         studentRepository.delete(existingStudent);
     }
 
-    // Reusable method for finding a student
     private Student findStudentById(Long id) {
 
         return studentRepository.findById(id)
@@ -112,7 +120,7 @@ public class StudentService {
                 ));
     }
 
-    // Convert StudentRequest DTO into Student entity
+
     private Student mapToEntity(StudentRequest request) {
 
         Student student = new Student();
@@ -128,7 +136,7 @@ public class StudentService {
         return student;
     }
 
-    // Convert Student entity into StudentResponse DTO
+
     private StudentResponse mapToResponse(Student student) {
 
         StudentResponse response = new StudentResponse();

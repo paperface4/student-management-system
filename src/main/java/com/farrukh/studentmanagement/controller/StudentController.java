@@ -14,6 +14,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+
+import com.farrukh.studentmanagement.dto.PagedStudentResponse;
 import com.farrukh.studentmanagement.dto.StudentRequest;
 import com.farrukh.studentmanagement.dto.StudentResponse;
 
@@ -34,9 +36,12 @@ public StudentResponse registerStudent(
 }
 
     @GetMapping("/students")
-    public List<StudentResponse> getAllStudents() {
-        return studentService.getAllStudents();
-    }
+public PagedStudentResponse getAllStudents(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+) {
+    return studentService.getAllStudents(page, size);
+}
 
     @GetMapping("/students/{id}")
     public StudentResponse getStudentById(@PathVariable  Long id) {
