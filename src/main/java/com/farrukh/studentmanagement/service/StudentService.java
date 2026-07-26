@@ -9,6 +9,7 @@ import com.farrukh.studentmanagement.exception.DuplicateRollNumberException;
 import com.farrukh.studentmanagement.exception.StudentNotFoundException;
 import com.farrukh.studentmanagement.repository.StudentRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -43,11 +44,11 @@ public class StudentService {
     }
 
     
-    public PagedStudentResponse getAllStudents(int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
-
+    public PagedStudentResponse getAllStudents(int page, int size, String sortBy, String direction) {
+    
+    Sort sort=Sort.by(Sort.Direction.fromString(direction),sortBy);
+    Pageable pageable = PageRequest.of(page, size, sort);
     Page<Student> students = studentRepository.findAll(pageable);
-
     List<StudentResponse> studentResponses = students.getContent()
             .stream()
             .map(this::mapToResponse)
