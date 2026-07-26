@@ -14,7 +14,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
+import com.farrukh.studentmanagement.dto.StudentRequest;
+import com.farrukh.studentmanagement.dto.StudentResponse;
 
 @RestController
 public class StudentController {
@@ -25,24 +26,26 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping("/students")
-    public Student registerStudent( @Valid @RequestBody Student student) {
-        return studentService.registerStudent(student);
-    }
+   @PostMapping("/students")
+public StudentResponse registerStudent(
+        @Valid @RequestBody StudentRequest request) {
+
+    return studentService.registerStudent(request);
+}
 
     @GetMapping("/students")
-    public List<Student> getAllStudents() {
+    public List<StudentResponse> getAllStudents() {
         return studentService.getAllStudents();
     }
 
     @GetMapping("/students/{id}")
-    public Student getStudentById(@PathVariable  Long id) {
-        return studentService.getstudentById(id);
+    public StudentResponse getStudentById(@PathVariable  Long id) {
+        return studentService.getStudentById(id);
     }
 
-    @PutMapping("students/{id}")
-    public Student updateStudentInfo(@PathVariable Long id, @RequestBody Student student) {
-        return studentService.updateStudentInfo(id, student);
+    @PutMapping("/students/{id}")
+    public StudentResponse updateStudentInfo(@PathVariable Long id, @RequestBody StudentRequest request) {
+        return studentService.updateStudentInfo(id, request);
     }
     
     @DeleteMapping("/students/{id}")
