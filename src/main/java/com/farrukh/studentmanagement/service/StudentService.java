@@ -8,6 +8,9 @@ import com.farrukh.studentmanagement.exception.DuplicateEmailException;
 import com.farrukh.studentmanagement.exception.DuplicateRollNumberException;
 import com.farrukh.studentmanagement.exception.StudentNotFoundException;
 import com.farrukh.studentmanagement.repository.StudentRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,6 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    // Register a new student
     public StudentResponse registerStudent(StudentRequest request) {
 
         if (studentRepository.existsByEmail(request.getEmail())) {
