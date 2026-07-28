@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -64,8 +65,66 @@ public class StudentService {
     );
 }
 
-    
-    public StudentResponse getStudentById(Long id) {
+public List<StudentResponse> searchStudentsByNameIgnoreCase(String name) {
+    List<Student> students = studentRepository.findByNameContainingIgnoreCase(name);
+    return students.stream().map(this::mapToResponse).toList();
+}
+
+public StudentResponse getStudentByRollNumber(String rollNumber) {
+
+    Optional<Student> student = studentRepository.findByRollNumber(rollNumber);
+    return student.map(this::mapToResponse)
+    .orElseThrow(() -> new StudentNotFoundException(
+            "No student exists with roll number: " + rollNumber
+    ));
+}
+
+public StudentResponse findStudentByEmail(String email) {
+
+    Optional<Student> student = studentRepository.findStudentByEmail(email);
+    return student.map(this::mapToResponse)
+            .orElseThrow(() -> new StudentNotFoundException(
+                    "No student exists with email: " + email
+            ));
+}
+
+public List<StudentResponse> searchStudents(String name, String email) {
+
+    boolean hasName = name != null && !name.isBlank();
+    boolean hasEmail = email != null && !email.isBlank();
+
+    List<Student> students;
+
+    if (hasName && hasEmail) {
+
+        students = studentRepository
+                . findByNameContainingIgnoreCaseAndEmail(
+                        name.trim(),
+                        email.trim()
+                );
+
+    } else if (hasName) {
+
+        students = studentRepository
+                .findByNameContainingIgnoreCase(name.trim());
+
+    } else if (hasEmail) {
+
+        students = studentRepository
+                .findStudentByEmail(email.trim())
+                .map(List::of)
+                .orElseGet(List::of);
+
+    } else {
+
+        students = studentRepository.findAll();
+    }
+
+    return students.stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+public StudentResponse getStudentById(Long id) {
 
         Student student = findStudentById(id);
 

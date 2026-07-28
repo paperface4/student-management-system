@@ -44,12 +44,33 @@ public PagedStudentResponse getAllStudents(
 ) {
     return studentService.getAllStudents(page, size, sortBy, direction);
 }
+    // @GetMapping("/students/search")
+    // public List<StudentResponse> searchStudentsByNameIgnoreCase(@RequestParam String name) {
+    //  return studentService.searchStudentsByNameIgnoreCase(name);
+    // }
+
+    @GetMapping("/students/rollNumber/{rollNumber}")
+    public StudentResponse getStudentByRollNumber(@PathVariable String rollNumber) {
+        return studentService.getStudentByRollNumber(rollNumber);
+    }
+
+    @GetMapping("/students/email/{email}")
+    public StudentResponse findStudentByEmail(@PathVariable String email) {
+        return studentService.findStudentByEmail(email);
+    }
 
     @GetMapping("/students/{id}")
     public StudentResponse getStudentById(@PathVariable  Long id) {
         return studentService.getStudentById(id);
     }
 
+   @GetMapping("/students/search")
+public List<StudentResponse> searchStudents(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String email
+) {
+    return studentService.searchStudents(name, email);
+}
     @PutMapping("/students/{id}")
     public StudentResponse updateStudentInfo(@PathVariable Long id, @RequestBody StudentRequest request) {
         return studentService.updateStudentInfo(id, request);
