@@ -53,8 +53,7 @@ public class StudentController {
     })
     @PostMapping("/students")
     @ResponseStatus(HttpStatus.CREATED)
-    public StudentResponse registerStudent(
-            @Valid @RequestBody StudentRequest request) {
+    public StudentResponse registerStudent( @Valid @RequestBody StudentRequest request) {
 
         return studentService.registerStudent(request);
     }

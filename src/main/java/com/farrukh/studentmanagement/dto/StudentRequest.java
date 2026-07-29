@@ -9,10 +9,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 public class StudentRequest {
     
     @NotBlank(message = "name cannot be blank")
+    @Size(min = 8, max = 20, message = "Name must be between 8 and 20 characters")
     private String name;
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email has to be in valid format") 
