@@ -44,7 +44,7 @@ public class AuthController {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "A User with the provided email or roll number already exists"
+                    description = "A user with the provided username or email already exists"
             )
     
 })

@@ -7,7 +7,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -19,7 +20,9 @@ public SecurityFilterChain config(HttpSecurity http) throws Exception {
             .requestMatchers(
                 "/swagger-ui/**",
                 "/swagger-ui.html",
-                "/v3/api-docs/**"
+                "/v3/api-docs/**",
+                "/api/auth/register",
+                "/api/auth/login"
             ).permitAll()
             .anyRequest().authenticated()
         )
@@ -30,5 +33,10 @@ public SecurityFilterChain config(HttpSecurity http) throws Exception {
 @Bean
 public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+}
+@Bean
+public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+ throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
 }
 }
