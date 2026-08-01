@@ -13,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import com.farrukh.studentmanagement.service.JwtAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -25,7 +27,12 @@ public class SecurityConfig {
     @Bean
 public SecurityFilterChain config(HttpSecurity http) throws Exception {
     http
-        .csrf(csrf -> csrf.disable())
+        .csrf(csrf -> csrf.disable()).exceptionHandling(exception -> exception
+    .authenticationEntryPoint(
+        (request, response, authException) ->
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+    )
+)
         .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(

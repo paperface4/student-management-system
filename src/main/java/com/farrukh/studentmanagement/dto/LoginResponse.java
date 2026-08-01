@@ -2,8 +2,8 @@ package com.farrukh.studentmanagement.dto;
 
 public class LoginResponse {
     private String token;
-    private String role;
     private String username;
+    private String role;
 
     public String getToken(){
         return token;
@@ -24,7 +24,7 @@ public class LoginResponse {
         this.role=role;
     }
 
-    public LoginResponse(String token,String role,String username){
+    public LoginResponse(String token,String username,String role){
         this.token=token;
         this.username=username;
         this.role=role;
